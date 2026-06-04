@@ -88,7 +88,7 @@ function CustomerPage() {
         </label>
 
         <button type="submit" style={{ padding: '15px', backgroundColor: '#F08300', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}>
-          提交報修任務
+          提交反應
         </button>
       </form>
     </div>

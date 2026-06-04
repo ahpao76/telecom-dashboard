@@ -40,7 +40,7 @@ function AdminPage() {
 
       // ⚠️ 請在此處填入你從 Google AI Studio 申請到的真實 API Key
       const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY; 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       // 建立 System Prompt，限制 AI 必須扮演台灣大客服，且必須使用台灣在地用語
       const systemPrompt = `你是一位精通電信業務的「台灣大哥大」高級客服專家。
@@ -65,6 +65,7 @@ function AdminPage() {
         });
 
         const data = await response.json();
+        console.log(data);
         
         // 解析 Gemini 撈回來的真實文字
         const aiReply = data.candidates[0].content.parts[0].text;
