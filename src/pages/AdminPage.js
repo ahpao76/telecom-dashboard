@@ -8,14 +8,12 @@ function AdminPage() {
   const [isSending, setIsSending] = useState(false); 
   const [manualReply, setManualReply] = useState(""); 
 
-  // 1. 初始化：只載入本地儲存（客戶端即時送來的資料）
   useEffect(() => {
     const localData = JSON.parse(localStorage.getItem('customTickets') || '[]');
     
-    // 依據時間 (id) 從舊到新排序，確保編號順序正確
+    // 依據時間從舊到新排序
     localData.sort((a, b) => a.id - b.id);
     
-    // 動態賦予五位數流水號
     const formattedTasks = localData.map((task, index) => {
       return {
         ...task,
@@ -25,24 +23,20 @@ function AdminPage() {
       };
     });
 
-    // 最新提交的排在最上面
     setTasks(formattedTasks.reverse());
   }, []);
 
-  // 2. 當切換/點擊任務時：串接真實 Gemini 1.5 Flash API + 觸發打字機效果
+  // 串接真實 Gemini API
   useEffect(() => {
-    // 定義一個非同步的 API 呼叫函式
     const fetchAiSuggestion = async () => {
       if (!selectedTask) return;
       
       setDisplayedText("🪄 AI 正在深度分析客戶訴求並擬定草稿...");
       setManualReply(selectedTask.customReply || ""); 
 
-      // ⚠️ 請在此處填入你從 Google AI Studio 申請到的真實 API Key
       const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY; 
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-      // 建立 System Prompt，限制 AI 必須扮演台灣大客服，且必須使用台灣在地用語
+      // 建立 System Prompt
       const systemPrompt = `你是一位精通電信業務的「台灣大哥大」高級客服專家。
 請針對使用者的抱怨或報修內容，進行專業安撫並給出具體的下一步解決步驟。
 回覆規範：
@@ -66,11 +60,8 @@ function AdminPage() {
 
         const data = await response.json();
         console.log(data);
-        
-        // 解析 Gemini 撈回來的真實文字
         const aiReply = data.candidates[0].content.parts[0].text;
 
-        // 【打字機效果】將真實的 AI 文本一個一個字印在畫面上
         setDisplayedText(""); 
         let index = 0;
         const timer = setInterval(() => {
@@ -90,7 +81,7 @@ function AdminPage() {
     fetchAiSuggestion();
   }, [selectedTask]);
 
-  // 3. 點擊任務與動態預設情緒（未來可進一步與 Gemini 整合一同判斷）
+  //預設情緒（未來可進一步與 Gemini 整合一同判斷）
   const handleSelectTask = (task) => {
     if (task.sentiment === "未偵測") {
       const updatedTask = {
@@ -105,7 +96,7 @@ function AdminPage() {
     }
   };
 
-  // 4. 更新處理狀態
+  //更新處理狀態
   const handleStatusChange = (newStatus) => {
     if (!selectedTask) return;
     const updated = { ...selectedTask, status: newStatus };
@@ -113,7 +104,6 @@ function AdminPage() {
     setSelectedTask(updated);
   };
 
-  // 5. 即時同步手動回覆內容
   const handleManualReplyChange = (text) => {
     setManualReply(text);
     const updated = { ...selectedTask, customReply: text };
@@ -140,7 +130,7 @@ function AdminPage() {
   return (
     <div style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', fontFamily: '"Microsoft JhengHei", sans-serif' }}>
       <header style={{ backgroundColor: '#F08300', color: 'white', padding: '15px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ margin: 0, fontSize: '24px' }}>台灣大 | AI 全通路客服中控台</h1>
+        <h1 style={{ margin: 0, fontSize: '24px' }}>台灣大 | 客服中控台</h1>
         <span>管理員：Admin</span>
       </header>
 

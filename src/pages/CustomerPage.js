@@ -48,7 +48,7 @@ function CustomerPage() {
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px', fontFamily: '"Microsoft JhengHei", sans-serif' }}>
       <header style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h1 style={{ color: '#F08300' }}>台灣大哥大 | 客戶支援入口</h1>
-        <p>請填寫下方表單，中控台將即時同步您的需求</p>
+        <p>請填寫下方表單描述您的需求</p>
       </header>
       
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
